@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 from database import add_search_marketplace_data, update_items
 from spacemate import add_listing, upload_img
-import time, re
+import time, re, os
 
 Base_Url = 'https://www.facebook.com'
 Title_Filter = ["storage","space","garage","parking"]
@@ -47,7 +47,6 @@ def scennar_page_detail(link):
             browser.close()
     except Exception as error:
         print(f"scennar_page_detail: {str(error)}")
-        return False
 
 
 def element_visibile(page,locator_selector):
@@ -93,6 +92,9 @@ def search_pages_scroll_scanner(page,location,search_query):
     last_height     = page.evaluate("document.body.scrollHeight")
 
     while True:
+
+        if os.environ['Agent_List_Scanner'] == "Stoped": break
+
         items = page.query_selector_all('[data-virtualized="false"] > div ')
         try:
             for item in items[-20:]:
@@ -150,8 +152,13 @@ def get_img_links(page):
 
 
 def get_maps_data(page):
-    maps_locator = '[style="height: 120px; width: 328px;"] > div:nth-child(1)'
-    element = page.wait_for_selector(maps_locator, timeout=10000)
+    maps_locator_1 = '[style="height: 120px; width: 328px;"] > div:nth-child(1)'
+    maps_locator_2 = '[style="padding-top: calc(36.5854%);"] > div:nth-child(1)'
+    try:
+        element = page.wait_for_selector(maps_locator_1, timeout=5000)
+    except:
+        element = page.wait_for_selector(maps_locator_2, timeout=5000)
+
     style = element.get_attribute('style')
     harita_link = str(style).replace('background-image: url("','').replace('");','')
     coordinates = extract_coordinates(harita_link)
@@ -164,7 +171,3 @@ def extract_coordinates(url):
     if match:
         return match.groups()
     return None
-
-
-
-scennar_page_detail("/marketplace/item/1503903196893221/")

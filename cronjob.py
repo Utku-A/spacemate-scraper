@@ -1,6 +1,7 @@
 from flask_apscheduler import APScheduler
 from concurrent.futures import ThreadPoolExecutor
-from browser import search_facebook_marketplace
+from database import get_page_scanner_job_link_data
+from browser import search_facebook_marketplace, scennar_page_detail
 import os
 
 scheduler = APScheduler()
@@ -15,7 +16,7 @@ def min1():
             executor.submit(start_marketplace_search_scanner)
 
         if os.environ['Agent_Page_Scanner'] == 'Starter':
-            executor.submit()
+            executor.submit(start_detail_page_scanner)
 
 
 
@@ -28,3 +29,16 @@ def start_marketplace_search_scanner():
         os.environ['Agent_List_Scanner'] = "Ready"
     except:
         os.environ['Agent_List_Scanner'] = "Ready"
+
+
+
+def start_detail_page_scanner():
+    try:
+        os.environ['Agent_Page_Scanner'] = "Running"
+        link_data = get_page_scanner_job_link_data()
+        for link in link_data:
+            if os.environ['Agent_Page_Scanner'] == "Stoped": break
+            scennar_page_detail(link[0])
+        os.environ['Agent_Page_Scanner'] = "Ready"
+    except:
+        os.environ['Agent_Page_Scanner'] = "Ready"

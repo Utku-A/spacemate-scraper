@@ -80,3 +80,7 @@ def get_items_data_db(link):
 
 def set_items_listing_id_db(link, listing_id):
     db_insert("UPDATE Spacemate.facebook_marketplace SET Listing_ID = %s WHERE Link = %s",(listing_id, link))
+
+
+def get_page_scanner_job_link_data():
+    return db_execute("SELECT Link FROM Spacemate.facebook_marketplace WHERE Listing_ID is null;")
