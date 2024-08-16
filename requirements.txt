@@ -1,0 +1,14 @@
+Flask
+requests
+APScheduler
+Flask-APScheduler
+mysql-connector-python
+schedule
+openpyxl
+pyopenssl
+playwright
+gevent
+pandas
+pymongo
+pydantic
+boto3
