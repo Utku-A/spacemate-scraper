@@ -132,6 +132,7 @@ def get_detail_page_data(page, link):
     title = page.inner_text('h1 span')
     element_visibile(page,'.x126k92a span > :nth-child(1)').click()
     description = page.inner_text('.x126k92a')
+    description = description.replace("Daha az gör","") if description else ""
     img_links   = get_img_links(page)
     update_items(link, title, description, float(maps_x), float(maps_y))
     if add_listing(link, img_links):
