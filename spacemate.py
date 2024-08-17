@@ -8,11 +8,10 @@ app = Flask(__name__)
 file_path = f'{str(app.static_folder)}/img/'
 file_path = file_path.replace("\\","/").replace("/model","")
 
-base_url = os.environ.get("Base_Url")
-base_api_url = os.environ.get("Base_Api_Url")
 
 
 def get_token_headers(): 
+    base_url = os.environ.get("Base_Url")
     session = requests.Session()
     res_csrf_token = session.get(f"{base_url}/api/auth/csrf")
     csrf_token = res_csrf_token.json()['csrfToken']
@@ -37,6 +36,9 @@ def add_listing(link, img_links):
     utc_now = datetime.now(pytz.utc)
     formatted_utc_now = utc_now.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
     location_data = get_location_details(data["Maps_X"],data["MAPS_Y"])
+
+    base_url = os.environ.get("Base_Url")
+    base_api_url = os.environ.get("Base_Api_Url")
 
     headers = {
         "authorization"     : get_token_headers(),
@@ -100,6 +102,7 @@ def add_listing(link, img_links):
 
 
 def dell_listing(id):
+    base_api_url = os.environ.get("Base_Api_Url")
     response = requests.delete(f"{base_api_url}/bo/listing/{id}",headers={"authorization": get_token_headers()})
     if response.ok: return True
     else: return False
@@ -117,6 +120,7 @@ def delete_local_img(file_name):
 
 
 def upload_img(id,file_name):
+    base_api_url = os.environ.get("Base_Api_Url")
     upload_file_path = f"{file_path}{file_name}"
     files = {
         'files': open(upload_file_path, 'rb') 
