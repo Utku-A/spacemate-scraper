@@ -1,4 +1,16 @@
-import requests
+import requests, json
+
+with open('timezone.json','r',  encoding='utf-8') as file:
+    json_data = file.read()
+
+timezone = json.loads(json_data)['countries']
+
+
+def get_timezone_int(area):
+    for list in timezone:
+        if list['timezone'] == area:
+            return list['timezone_int']
+
 
 def get_location_details(lat, lon):
     api_key = "321daa579d2b497fadbf50b13e7c9b14"
@@ -9,6 +21,8 @@ def get_location_details(lat, lon):
         adres_1 = response_data['results'][0]['address_line1'] if 'address_line1' in response_data['results'][0] else ""
         adres_2 = response_data['results'][0]['address_line2'] if 'address_line2' in response_data['results'][0] else ""
 
+        timezone = response_data['results'][0]['timezone']['name']
+
         data = {
             "ülke"            : response_data['results'][0]['country'] if 'country' in response_data['results'][0] else None,
             "ülke_kodu"       : response_data['results'][0]['country_code'] if 'country_code' in response_data['results'][0] else None,
@@ -18,7 +32,7 @@ def get_location_details(lat, lon):
             "ilce"            : response_data['results'][0]['county'] if 'county' in response_data['results'][0] else None,
             "semt_mahalle"    : response_data['results'][0]['city'] if 'city' in response_data['results'][0] else None,
             "posta_kodu"      : response_data['results'][0]['postcode'] if 'postcode' in response_data['results'][0] else None,
-            "saat_bölgesi"    : response_data['results'][0]['timezone']['name'] if 'name' in response_data['results'][0]['timezone'] else None,
+            "saat_bölgesi"    : f"GMT{get_timezone_int(timezone)}" if get_timezone_int(timezone) < 0 else f"GMT+{get_timezone_int(timezone)}", 
             "ham_adres"       : f"{adres_1} {adres_2}"
         }
 
@@ -27,3 +41,5 @@ def get_location_details(lat, lon):
 
         return data
     else: return False
+
+get_location_details("41.2671533","31.4725895")
