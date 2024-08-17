@@ -20,9 +20,9 @@ def get_location_details(lat, lon):
         response_data = response.json()
         adres_1 = response_data['results'][0]['address_line1'] if 'address_line1' in response_data['results'][0] else ""
         adres_2 = response_data['results'][0]['address_line2'] if 'address_line2' in response_data['results'][0] else ""
-
-        timezone = response_data['results'][0]['timezone']['offset_STD']
-        timezone = f"GMT{timezone}",
+        
+        timezone_str = response_data['results'][0]['timezone']['offset_STD']
+        timezone_str = f"GMT{timezone_str}",
 
         data = {
             "ülke"            : response_data['results'][0]['country'] if 'country' in response_data['results'][0] else None,
@@ -33,7 +33,7 @@ def get_location_details(lat, lon):
             "ilce"            : response_data['results'][0]['county'] if 'county' in response_data['results'][0] else None,
             "semt_mahalle"    : response_data['results'][0]['city'] if 'city' in response_data['results'][0] else None,
             "posta_kodu"      : response_data['results'][0]['postcode'] if 'postcode' in response_data['results'][0] else None,
-            "saat_bölgesi"    : timezone, 
+            "saat_bölgesi"    : timezone_str, 
             "ham_adres"       : f"{adres_1} {adres_2}"
         }
 
