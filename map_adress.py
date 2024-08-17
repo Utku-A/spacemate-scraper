@@ -22,7 +22,7 @@ def get_location_details(lat, lon):
         adres_2 = response_data['results'][0]['address_line2'] if 'address_line2' in response_data['results'][0] else ""
         
         timezone_str = response_data['results'][0]['timezone']['offset_STD']
-        timezone_str = f"GMT{timezone_str}",
+        timezone_str = f"GMT{timezone_str}"
 
         data = {
             "ülke"            : response_data['results'][0]['country'] if 'country' in response_data['results'][0] else None,
