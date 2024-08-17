@@ -21,7 +21,8 @@ def get_location_details(lat, lon):
         adres_1 = response_data['results'][0]['address_line1'] if 'address_line1' in response_data['results'][0] else ""
         adres_2 = response_data['results'][0]['address_line2'] if 'address_line2' in response_data['results'][0] else ""
 
-        timezone = response_data['results'][0]['timezone']['name']
+        timezone = response_data['results'][0]['timezone']['offset_STD']
+        timezone = f"GMT{timezone}",
 
         data = {
             "ülke"            : response_data['results'][0]['country'] if 'country' in response_data['results'][0] else None,
@@ -32,7 +33,7 @@ def get_location_details(lat, lon):
             "ilce"            : response_data['results'][0]['county'] if 'county' in response_data['results'][0] else None,
             "semt_mahalle"    : response_data['results'][0]['city'] if 'city' in response_data['results'][0] else None,
             "posta_kodu"      : response_data['results'][0]['postcode'] if 'postcode' in response_data['results'][0] else None,
-            "saat_bölgesi"    : f"GMT{get_timezone_int(timezone)}" if get_timezone_int(timezone) < 0 else f"GMT+{get_timezone_int(timezone)}", 
+            "saat_bölgesi"    : timezone, 
             "ham_adres"       : f"{adres_1} {adres_2}"
         }
 
