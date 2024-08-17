@@ -16,7 +16,9 @@ def get_status():
         Agent_List_Scanner=os.environ['Agent_List_Scanner'],
         Agent_Page_Scanner=os.environ['Agent_Page_Scanner'],
         Search_Location=os.environ['Search_Location'],
-        Search_Query=os.environ['Search_Query']
+        Search_Query=os.environ['Search_Query'],
+        Base_Url=os.environ['Base_Url'],
+        Base_Api_Url=os.environ['Base_Api_Url']
     )
 
 
