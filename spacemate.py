@@ -8,9 +8,13 @@ app = Flask(__name__)
 file_path = f'{str(app.static_folder)}/img/'
 file_path = file_path.replace("\\","/").replace("/model","")
 
+base_url = os.environ.get("Base_Url")
+base_api_url = os.environ.get("Base_Api_Url")
+
+
 def get_token_headers(): 
     session = requests.Session()
-    res_csrf_token = session.get("https://test.spacemate.io/api/auth/csrf")
+    res_csrf_token = session.get(f"{base_url}/api/auth/csrf")
     csrf_token = res_csrf_token.json()['csrfToken']
 
     credentials_form_data = {
@@ -18,12 +22,12 @@ def get_token_headers():
         "password"      : "test1",
         "redirect"      : "false",
         "csrfToken"     : csrf_token,
-        "callbackUrl"   : "https://test.spacemate.io/auth/signin?callbackUrl=/",
+        "callbackUrl"   : f"{base_url}/auth/signin?callbackUrl=/",
         "json"          : "true"
     }
 
-    res_credentials = session.post("https://test.spacemate.io/api/auth/callback/credentials",data=credentials_form_data)
-    res_session = session.get("https://test.spacemate.io/api/auth/session")
+    res_credentials = session.post(f"{base_url}/api/auth/callback/credentials",data=credentials_form_data)
+    res_session = session.get(f"{base_url}/api/auth/session")
     token = res_session.json()['user']['accessToken']
     return token
 
@@ -38,9 +42,9 @@ def add_listing(link, img_links):
         "authorization"     : get_token_headers(),
         "content-type"      : "application/json",
         "accept-language"   : "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6",
-        "origin"            : "https://test.spacemate.io",
+        "origin"            : base_url,
         "priority"          : "u=1, i",
-        "referer"           : "https://test.spacemate.io/",
+        "referer"           : f"{base_url}/",
         "sec-ch-ua"         : '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
         "sec-ch-ua-mobile"  : "?0",
         "user-agent"        : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
@@ -79,7 +83,7 @@ def add_listing(link, img_links):
     }
 
 
-    listing_response = requests.post("https://test-api.spacemate.io/listing",headers=headers ,json=listing_data)
+    listing_response = requests.post(f"{base_api_url}/listing",headers=headers ,json=listing_data)
     if listing_response.ok: 
         listing_id = listing_response.json()['id']
         set_items_listing_id_db(link,listing_id)
@@ -96,7 +100,7 @@ def add_listing(link, img_links):
 
 
 def dell_listing(id):
-    response = requests.delete(f"https://test-api.spacemate.io/bo/listing/{id}",headers={"authorization": get_token_headers()})
+    response = requests.delete(f"{base_api_url}/bo/listing/{id}",headers={"authorization": get_token_headers()})
     if response.ok: return True
     else: return False
 
@@ -118,6 +122,6 @@ def upload_img(id,file_name):
         'files': open(upload_file_path, 'rb') 
     }
     
-    listing_response = requests.post(f"https://test-api.spacemate.io/listingImage/multiple?listingId={id}",headers={"authorization": get_token_headers()} ,files=files)
+    listing_response = requests.post(f"{base_api_url}/listingImage/multiple?listingId={id}",headers={"authorization": get_token_headers()} ,files=files)
     if listing_response.ok: return True 
     else: return False
