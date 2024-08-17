@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from browser import search_facebook_marketplace
+from spacemate import dell_listing
 from cronjob import scheduler
 import os, config
 
@@ -60,6 +60,12 @@ def stop_triger_detail_page():
         return jsonify(status="ok")
     else: return jsonify(status="Henüz çalışmayan şeyi durduramazsın."),401
 
+
+@app.route("/delete-listening/<string:id>")
+def delete_listening_data(id):
+    if dell_listing(id):
+        return jsonify(status="ok")
+    else: return jsonify(status="Bulunamadı."),401
 
 if __name__ == "__main__":  
     #app.run(host="0.0.0.0", port=3000, ssl_context='adhoc', threaded=True)

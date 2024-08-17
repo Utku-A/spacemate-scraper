@@ -41,5 +41,3 @@ def get_location_details(lat, lon):
 
         return data
     else: return False
-
-get_location_details("41.2671533","31.4725895")

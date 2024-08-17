@@ -146,7 +146,8 @@ def get_img_links(page):
     items = page.query_selector_all('[style="display: inline;"] img')
     for item in items:
         img_link = item.get_attribute("src")
-        img_links.append(img_link)
+        if img_link not in img_links:
+            img_links.append(img_link)
 
     return img_links
 
