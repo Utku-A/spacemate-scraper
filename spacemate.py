@@ -129,3 +129,11 @@ def upload_img(id,file_name):
     listing_response = requests.post(f"{base_api_url}/listingImage/multiple?listingId={id}",headers={"authorization": get_token_headers()} ,files=files ,timeout=60)
     if listing_response.ok: return True 
     else: return False
+
+
+def delete_all_listing():
+    base_api_url = os.environ.get("Base_Api_Url")
+    get_ids_response = requests.get(f"{base_api_url}/listing/user?limit=200&offset=1",headers={"authorization": get_token_headers()})
+    items = get_ids_response.json()['payload']
+    for item in items:
+        dell_listing(item['id'])
