@@ -126,6 +126,6 @@ def upload_img(id,file_name):
         'files': open(upload_file_path, 'rb') 
     }
     
-    listing_response = requests.post(f"{base_api_url}/listingImage/multiple?listingId={id}",headers={"authorization": get_token_headers()} ,files=files)
+    listing_response = requests.post(f"{base_api_url}/listingImage/multiple?listingId={id}",headers={"authorization": get_token_headers()} ,files=files ,timeout=60)
     if listing_response.ok: return True 
     else: return False
